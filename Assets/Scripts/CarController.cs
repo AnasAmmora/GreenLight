@@ -3,45 +3,57 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
     [Header("Car Movement")]
-    public float moveSpeed = 10f; // Speed of car movement (left & right)
-    public float maxX = 3f; // Maximum movement limit on X-axis
+    public float moveSpeed = 10f; 
+    public float maxX = 3f;
+    public float forwardOffset = 1.5f;
+    public float returnSpeed = 2f; 
 
     [Header("Car Tilt Effect")]
-    public float tiltAngle = 15f; // Angle of car tilt when turning
-    public float tiltSpeed = 5f; // Speed of tilt adjustment
+    public float tiltAngle = 15f; 
+    public float tiltSpeed = 5f; 
 
     [Header("Wheel Rotation")]
     public Transform frontLeftWheel;
     public Transform frontRightWheel;
     public Transform rearLeftWheel;
     public Transform rearRightWheel;
-    public float wheelTurnAngle = 30f; // Angle of front wheels turning
-    public float wheelSpinSpeed = 500f; // Speed of wheel spinning effect
+    public float wheelTurnAngle = 30f;
+    public float wheelSpinSpeed = 500f;
+
+    private Vector3 startPosition;
+
+    private void Start()
+    {
+        startPosition = transform.position;
+    }
 
     private void Update()
     {
-        MoveCar(); // Call movement function every frame
+        MoveCar();
     }
 
     void MoveCar()
     {
-        float moveInput = Input.GetAxis("Horizontal"); // Get player input for left/right movement
+        float moveInput = Input.GetAxis("Horizontal");
 
-        // Calculate new X position while clamping it within allowed limits
+
         float newX = Mathf.Clamp(transform.position.x + moveInput * moveSpeed * Time.deltaTime, -maxX, maxX);
-        transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+        float forwardMove = Mathf.Abs(moveInput) > 0 ? forwardOffset : 0; 
+        float newZ = Mathf.Lerp(transform.position.z, startPosition.z + forwardMove, Time.deltaTime * returnSpeed);
 
-        // Apply car tilt effect based on movement
+        transform.position = new Vector3(newX, transform.position.y, newZ);
+
+
         float tilt = moveInput * -tiltAngle;
         Quaternion targetRotation = Quaternion.Euler(0, 0, tilt);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * tiltSpeed);
 
-        // Rotate front wheels based on movement direction
+
         float wheelRotation = moveInput * wheelTurnAngle;
         frontLeftWheel.localRotation = Quaternion.Euler(0, wheelRotation, 0);
         frontRightWheel.localRotation = Quaternion.Euler(0, wheelRotation, 0);
 
-        // Spin all four wheels to simulate motion
+       
         float spinRotation = wheelSpinSpeed * Time.deltaTime;
         frontLeftWheel.Rotate(spinRotation, 0, 0, Space.Self);
         frontRightWheel.Rotate(spinRotation, 0, 0, Space.Self);

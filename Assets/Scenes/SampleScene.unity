@@ -14,8 +14,8 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
@@ -594,8 +594,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9020fddad28312741ac55db61fbb8756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  environmentPrefab: {fileID: 1483116801139635201, guid: 80b8df70dcbf6a942b1c70c26455a550, type: 3}
-  destroyZ: -97
+  environmentPrefab: {fileID: 1483116801139635201, guid: 719743041697e8b459c3e08276cb2d7b, type: 3}
+  destroyZ: -195.5
   spawnTriggerZ: 0
   firstSpawnPosition: {fileID: 455421910}
   nextSpawnPosition: {fileID: 1420164325}
@@ -624,7 +624,7 @@ Transform:
   m_GameObject: {fileID: 1420164324}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 97}
+  m_LocalPosition: {x: 0, y: 0, z: 195.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

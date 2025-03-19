@@ -3,15 +3,39 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+
+    [Header("Enemy Cars Settings")]
+    public float enemyCarsSpeed = 10f;
+    public float timeBetweenSpawningCars = 3f;
+    [SerializeField] private List<GameObject> enemyCarPrefabs;
+    [SerializeField] private List<Transform> enemyCarSpawnPoints;
+
+    private float enemySpawnTimer;
+
     [Header("Environment Settings")]
-    public GameObject environmentPrefab; // The prefab for environment units
-    public float destroyZ = -50f; // Position where the environment gets destroyed
-    public float spawnTriggerZ = -1f; // When to spawn a new environment
-    public Transform firstSpawnPosition;
-    public Transform nextSpawnPosition;
+    public float environmentSpeed = 10f;
+    [SerializeField] private GameObject environmentPrefab;
+    [SerializeField] private float destroyZ = -50f;
+    [SerializeField] private float spawnTriggerZ = -1f;
+    [SerializeField] private Transform firstSpawnPosition;
+    [SerializeField] private Transform nextSpawnPosition;
 
     private Queue<GameObject> activeUnits = new Queue<GameObject>();
-    private bool hasSpawnedNext = false; // Flag to track if next environment has been spawned
+    private bool hasSpawnedNext = false;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
     private void Start()
     {
@@ -21,33 +45,41 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Spawn the first environment unit
         SpawnNewUnit(firstSpawnPosition);
     }
 
     private void Update()
     {
+        HandleSpawnEnvironments();
+        HandleSpawnEnemyCars();
+    }
+
+    private void HandleSpawnEnemyCars()
+    {
+
+    }
+
+    private void HandleSpawnEnvironments()
+    {
         if (activeUnits.Count > 0)
         {
             GameObject firstUnit = activeUnits.Peek();
 
-            // If the first unit reaches the trigger point and we haven't spawned the next one yet
             if (firstUnit.transform.position.z <= spawnTriggerZ && !hasSpawnedNext)
             {
                 SpawnNewUnit(nextSpawnPosition);
-                hasSpawnedNext = true; // Ensure only one new environment spawns
+                hasSpawnedNext = true;
             }
 
-            // If the first unit reaches the destroy point, remove it
             if (firstUnit.transform.position.z <= destroyZ)
             {
                 Destroy(activeUnits.Dequeue());
-                hasSpawnedNext = false; // Reset the flag so we can spawn again
+                hasSpawnedNext = false;
             }
         }
     }
 
-    void SpawnNewUnit(Transform spawnPosition)
+    private void SpawnNewUnit(Transform spawnPosition)
     {
         GameObject newUnit = Instantiate(environmentPrefab, spawnPosition.position, Quaternion.identity);
         activeUnits.Enqueue(newUnit);

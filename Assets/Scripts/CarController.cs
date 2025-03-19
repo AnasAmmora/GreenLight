@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class CarController : MonoBehaviour
-{
+{           
     [Header("Car Movement")]
     public float moveSpeed = 10f; 
     public float maxX = 3f;
